@@ -40,4 +40,5 @@ Once image is built use
 docker run --rm -it openapi 
 ```
 
-
+## Test
+curl 'http://35.246.219.85:8080/n5g-eir-eic/v1/equipment-status?pei=imei-123456789012345';

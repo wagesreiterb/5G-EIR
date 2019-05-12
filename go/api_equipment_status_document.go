@@ -28,7 +28,8 @@ func GetEquipmentStatus(w http.ResponseWriter, r *http.Request) {
 		// in case of an error
 		fmt.Println(err)
 		w.Header().Set("Content-Type", "application/problem+json; charset=UTF-8")
-		w.WriteHeader(http.StatusNotFound)
+		//w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusInternalServerError)
 	} else {
 		// in case of success
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
