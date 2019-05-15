@@ -19,7 +19,8 @@ import (
 	//
 	//    sw "github.com/myname/myrepo/go"
 	//
-	sw "./go"
+	// sw "./go"
+	sw "github.com/wagesreiterb/5g-eir/go"
 )
 
 func main() {
