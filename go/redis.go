@@ -31,7 +31,7 @@ func redisNewPool() *redis.Pool {
 			log.Printf("Redis->requesting connection\n")
 			//Todo: make IP configureable
 			c, err := redis.Dial("tcp",
-				"35.202.143.31:6379",
+				"five-g-eir-redis:6379",
 				redis.DialConnectTimeout(3*time.Second))
 			if err != nil {
 				log.Printf("Redis->cannot connect :-(\n")
@@ -39,9 +39,9 @@ func redisNewPool() *redis.Pool {
 			}
 
 			//Todo: don't set PW in code ;-)
-			response, err := c.Do("AUTH", "MKX9xoTPT8Ca") //redis1
+			//response, err := c.Do("AUTH", "MKX9xoTPT8Ca") //redis1
 			//response, err := c.Do("AUTH", "CX9EN8as6UBS")	//redis2
-			log.Printf("Redis->connection: %s\n", response)
+			//log.Printf("Redis->connection: %s\n", response)
 			return c, err
 		},
 	}

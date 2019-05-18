@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: five-g-eir-redis
+spec:
+  selector:
+    app: 5g-eir
+    tier: redis
+  ports:
+  - protocol: TCP
+    port: 6379
+    targetPort: 6379
+

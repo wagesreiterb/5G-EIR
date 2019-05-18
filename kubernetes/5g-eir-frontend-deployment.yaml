@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 5g-eir-frontend
+spec:
+  selector:
+    matchLabels:
+      app: 5g-eir
+      tier: frontend
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: 5g-eir
+        tier: frontend
+    spec:
+      containers:
+      - name: 5g-eir-frontend
+        image: "gcr.io/striped-altar-206604/5g-eir-frontend:v3"

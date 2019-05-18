@@ -65,7 +65,7 @@ var routes = Routes{
 	{
 		"GetEquipmentStatus",
 		strings.ToUpper("Get"),
-		"/n5g-eir-eic/v1/equipment-status",
+		"/5g-eir-eic/v1/equipment-status",
 		GetEquipmentStatus,
 	},
 }

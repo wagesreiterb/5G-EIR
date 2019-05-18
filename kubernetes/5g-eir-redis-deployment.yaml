@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 5g-eir-redis
+  labels:
+    app: 5g-eir
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: 5g-eir
+      tier: redis
+  template:
+    metadata:
+      labels:
+        app: 5g-eir
+        tier: redis
+    spec:
+      containers:
+      - image: marketplace.gcr.io/google/redis4
+        name: redis
+
