@@ -10,23 +10,52 @@
 package openapi
 
 import (
-	"log"
+	"fmt"
 	"net/http"
+	"os"
 	"time"
 )
 
 func Logger(inner http.Handler, name string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
-
+		hostname, err := os.Hostname()
+		if err != nil {
+			panic(err)
+		}
 		inner.ServeHTTP(w, r)
 
-		log.Printf(
-			"%s %s %s %s",
+		//log.Printf(
+		//	"%s %s %s %s %s",
+		//	hostname,
+		//	r.Method,
+		//	r.RequestURI,
+		//	name,
+		//	time.Since(start),
+		//)
+
+		fmt.Printf(
+			"[%s] [%s] %s %s %s %s\n",
+			hostname,
+			"http",
 			r.Method,
 			r.RequestURI,
 			name,
 			time.Since(start),
 		)
 	})
+}
+
+func WriteLog(module string, text string) {
+	hostname, err := os.Hostname()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf(
+		"[%s] [%s] %s\n",
+		hostname,
+		module,
+		text,
+	)
 }

@@ -2,7 +2,6 @@ package openapi
 
 import (
 	"github.com/gomodule/redigo/redis"
-	"log"
 	"time"
 )
 
@@ -12,36 +11,37 @@ var Pool *redis.Pool
 
 // https://medium.com/@gilcrest_65433/basic-redis-examples-with-go-a3348a12878e
 func RedisConnect() {
-	log.Printf("Redis->connecting...")
-	log.Printf("Redis->requesting new pool...")
-	// newPool returns a pointer to a redis.Pool
-	Pool = redisNewPool()
+	WriteLog("redis", "connecting...")
+	WriteLog("redis", "requesting new pool...")
+	Pool = redisNewPool() // returns a pointer to a redis.Pool
 	redisPing(Pool.Get()) // test connection via ping
 }
 
 func redisNewPool() *redis.Pool {
 	return &redis.Pool{
-		// Maximum number of idle connections in the pool.
-		MaxIdle: 80, //80
-		// max number of connections
-		MaxActive: 12000, //12000
-		// Dial is an application supplied function for creating and
-		// configuring a connection.
+		MaxIdle:   80,    // Maximum number of idle connections in the pool.
+		MaxActive: 12000, // max number of connections
 		Dial: func() (redis.Conn, error) {
-			log.Printf("Redis->requesting connection\n")
+			WriteLog("redis", "requesting connection")
 			//Todo: make IP configureable
 			c, err := redis.Dial("tcp",
+				//"five-g-eir-redis:6379",	//kubernets
 				"five-g-eir-redis:6379",
+				//"35.239.35.61:6379",	// VM
 				redis.DialConnectTimeout(3*time.Second))
 			if err != nil {
-				log.Printf("Redis->cannot connect :-(\n")
+				WriteLog("redis", "cannot connect :-(")
 				panic(err.Error())
 			}
 
 			//Todo: don't set PW in code ;-)
 			//response, err := c.Do("AUTH", "MKX9xoTPT8Ca") //redis1
 			//response, err := c.Do("AUTH", "CX9EN8as6UBS")	//redis2
-			//log.Printf("Redis->connection: %s\n", response)
+			//authResponse, err := redis.String(response, err)
+			if err != nil {
+				panic(err.Error())
+			}
+			//WriteLog("redis", "authentication response response: " + authResponse)
 			return c, err
 		},
 	}
@@ -58,13 +58,13 @@ func redisPing(c redis.Conn) error {
 
 	// PING command returns a Redis "Simple String"
 	// Use redis.String to convert the interface type to string
-	s, err := redis.String(pong, err)
+	pingResponse, err := redis.String(pong, err)
 	if err != nil {
 		return err
 	}
 
-	log.Printf("Redis->Ping: %s\n", s)
-	// Output: PONG
+	//log.Printf("Redis->Ping: %s\n", ping_response)
+	WriteLog("redis", "ping response: "+pingResponse) // Output if connection works: PONG
 
 	return nil
 }
@@ -89,7 +89,7 @@ func redisGet(c redis.Conn, pei string) (EquipmentStatus, error) {
 	//s, err := redis.String(c.Do("GET", pei))
 	s, err := redis.String(c.Do("GET", pei))
 	if err != nil {
-		log.Printf("Redis->error get EquipmentStatus: %s\n", err)
+		WriteLog("redis", "[ERROR] get EquipmentStatus: "+err.Error())
 		return "", err
 	}
 

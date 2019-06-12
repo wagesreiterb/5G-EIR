@@ -24,7 +24,8 @@ import (
 )
 
 func main() {
-	log.Printf("Server started")
+	//log.Printf("Server started")
+	sw.WriteLog("main", "server started")
 
 	sw.RedisConnect()
 

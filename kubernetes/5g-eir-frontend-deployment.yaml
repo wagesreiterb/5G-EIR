@@ -16,4 +16,4 @@ spec:
     spec:
       containers:
       - name: 5g-eir-frontend
-        image: "gcr.io/striped-altar-206604/5g-eir-frontend:v3"
+        image: "gcr.io/striped-altar-206604/5g-eir-frontend:latest"

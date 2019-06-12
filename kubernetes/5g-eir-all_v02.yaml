@@ -1,0 +1,103 @@
+##############################################################################
+# https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+#
+# with affinity and anti-affinity rules
+#
+##############################################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 5g-eir-redis
+  labels:
+    app: 5g-eir
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: 5g-eir
+      tier: redis
+  template:
+    metadata:
+      labels:
+        app: 5g-eir
+        tier: redis
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: tier
+                    operator: In
+                    values:
+                      - redis
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - image: marketplace.gcr.io/google/redis4
+          name: redis
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: five-g-eir-redis
+spec:
+  selector:
+    app: 5g-eir
+    tier: redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 5g-eir-frontend
+spec:
+  selector:
+    matchLabels:
+      app: 5g-eir
+      tier: frontend
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: 5g-eir
+        tier: frontend
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: tier
+                    operator: In
+                    values:
+                      - frontend
+              topologyKey: "kubernetes.io/hostname"
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: tier
+                    operator: In
+                    values:
+                      - redis
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: 5g-eir-frontend
+          image: "gcr.io/striped-altar-206604/5g-eir-frontend:latest"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: five-g-eir-frontend-loadbalancer
+spec:
+  selector:
+    app: 5g-eir
+    tier: frontend
+  ports:
+    - protocol: "TCP"
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
