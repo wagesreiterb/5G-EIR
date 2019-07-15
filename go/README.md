@@ -41,11 +41,11 @@ docker run --rm -it openapi
 ```
 
 ## Fill redis
-```for i in `kubectl get pods | cut -d " " -f 1 | grep 5g-eir-redis-`do kubectl exec $i /usr/local/bin/redis-cli set imei-123456789012345 WHITELISTED; done```
+```for i in `kubectl get pods | cut -d " " -f 1 | grep 5g-eir-redis-`; do kubectl exec $i /usr/local/bin/redis-cli set imei-123456789012345 WHITELISTED; done```
 
-```for i in `kubectl get pods | cut -d " " -f 1 | grep 5g-eir-redis-`do kubectl exec $i /usr/local/bin/redis-cli set imei-123456789012346 BLACKLISTED; done```
+```for i in `kubectl get pods | cut -d " " -f 1 | grep 5g-eir-redis-`; do kubectl exec $i /usr/local/bin/redis-cli set imei-123456789012346 BLACKLISTED; done```
 
-```for i in `kubectl get pods | cut -d " " -f 1 | grep 5g-eir-redis-`do kubectl exec $i /usr/local/bin/redis-cli set imei-123456789012347 GREYLISTED; done```
+```for i in `kubectl get pods | cut -d " " -f 1 | grep 5g-eir-redis-`; do kubectl exec $i /usr/local/bin/redis-cli set imei-123456789012347 GREYLISTED; done```
 
 ## Test
 ```curl 'http://35.246.219.85:8080/n5g-eir-eic/v1/equipment-status?pei=imei-123456789012345';```
